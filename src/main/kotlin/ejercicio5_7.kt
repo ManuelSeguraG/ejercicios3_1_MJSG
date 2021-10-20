@@ -1,0 +1,5 @@
+class Coche
+
+fun main(){
+
+}
