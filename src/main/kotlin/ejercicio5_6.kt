@@ -1,5 +1,6 @@
 class Rectangulo(var base: Double, var altura: Double) {
 
+    // Se sobrescribe la funcion toString(), para ahorrarnos la necesidad de crear una funcion adicional
     override fun toString(): String {
         return super.toString()
     }
