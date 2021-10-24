@@ -14,7 +14,7 @@ fun main() {
     do {
         println("Entrada de texto: Hora")
         try {
-            reloj1.hora = readLine()!!.toInt()
+            reloj1.hora = readLine()?.toInt() ?: 0
         } catch (_: NumberFormatException) {
             println("Error, se reintentara")
         }
