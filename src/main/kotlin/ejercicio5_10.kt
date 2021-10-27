@@ -30,37 +30,36 @@ class ConjuntoLibros() {
     var posicionLibro: Int = 0
     var libroInsertado: Boolean = false
 
-    fun anadirLibro(LibroPorAnadir: Libro, posicion: Int): String {
-        conLibro[posicion] = LibroPorAnadir
-        return "Libro Añadido, posicion $posicion"
-    }
-
-//    fun anadirLibro(libroPorAnadir: Libro): String {
-//        contador = 0
-//        posicionLibro = 0
-//        libroInsertado = false
-//        while (!libroInsertado or (contador < 4)) {
-//            if (!conLibro[contador].idLibro.toString().equals("0")) {
-//                contador++
-//            } else {
-//                if (conLibro[contador].idLibro.toString().equals(libroPorAnadir.idLibro.toString())) {
-//                    contador++
-//                } else {
-//                    conLibro[contador] == libroPorAnadir
-//                    libroInsertado = true
-//                    posicionLibro = contador
-//                    contador = 4
-//                }
-//            }
-//        }
-//
-//        return if (libroInsertado) {
-//            "Libro Añadido en la posicion $posicionLibro"
-//        } else {
-//            "Libro no insertado"
-//        }
+//    fun anadirLibro(LibroPorAnadir: Libro, posicion: Int): String {
+//        conLibro[posicion] = LibroPorAnadir
+//        return "Libro Añadido, posicion $posicion"
 //    }
 
+    fun anadirLibro(libroPorAnadir: Libro): String {
+        contador = 0
+        posicionLibro = 0
+        libroInsertado = false
+        while (!libroInsertado or (contador < 4)) {
+            if (!conLibro[contador].idLibro.toString().equals("0")) {
+                contador++
+            } else {
+                if (conLibro[contador].idLibro.toString().equals(libroPorAnadir.idLibro.toString())) {
+                    contador++
+                } else {
+                    conLibro[contador] == libroPorAnadir
+                    libroInsertado = true
+                    posicionLibro = contador
+                    contador = 4
+                }
+            }
+        }
+
+        return if (libroInsertado) {
+            "Libro Añadido en la posicion $posicionLibro"
+        } else {
+            "Libro no insertado"
+        }
+    }
 
 }
 
@@ -71,11 +70,11 @@ fun main() {
     var conju1 = ConjuntoLibros()
 
     println(libro1.infoLibro())
-    println(conju1.anadirLibro(libro1, 1))
+    println(conju1.anadirLibro(libro1))
     println("")
     println(libro2.infoLibro())
-    println(conju1.anadirLibro(libro2, 2))
+    println(conju1.anadirLibro(libro2))
     println("")
     println(libro3.infoLibro())
-    println(conju1.anadirLibro(libro3, 3))
+    println(conju1.anadirLibro(libro3))
 }
