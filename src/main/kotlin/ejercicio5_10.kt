@@ -1,80 +1,83 @@
 class Libro(
-    var idLibro: Int,
     var tituloLibro: String,
     var autorLibro: String,
-    var numeroPaginasLibro: Int,
-    calificacionLibro: Int
+    var numeroPaginas: Int,
+    var calificacionLibro: Int
 ) {
 
-    var calificacionLibro: Int = comprobarPuntuacion(calificacionLibro)
-        set(value) {
-            field = comprobarPuntuacion(value)
-        }
-
-    fun comprobarPuntuacion(puntuacion: Int): Int {
-        return if (puntuacion in 0..10) {
-            puntuacion
-        } else {
-            0
-        }
+    init {
+        require(numeroPaginas > 0) { "El numero de paginas es negativo" }
+        require(calificacionLibro in 0..10) { "La calificicacion no entra dentro de los limites establecidos" }
     }
 
-    fun infoLibro(): String =
-        "Titulo: $tituloLibro \n Autor: $autorLibro \n Numero de Paginas: $numeroPaginasLibro \n Calificacion $calificacionLibro"
-
+    fun informacionLibro(): String =
+        "Titulo: $tituloLibro, Autor/a: $autorLibro, Numero de paginas: $numeroPaginas, Calificacion del Libro: $calificacionLibro"
 }
 
 class ConjuntoLibros() {
-    var conLibro = Array(5) { Libro(0, "", "", 0, 0) }
+    var librosContenidos: Array<Libro?> = kotlin.arrayOfNulls<Libro>(5)
     var contador: Int = 0
-    var posicionLibro: Int = 0
-    var libroInsertado: Boolean = false
+    var libroAñadido: Boolean = false
 
-//    fun anadirLibro(LibroPorAnadir: Libro, posicion: Int): String {
-//        conLibro[posicion] = LibroPorAnadir
-//        return "Libro Añadido, posicion $posicion"
-//    }
-
-    fun anadirLibro(libroPorAnadir: Libro): String {
+    fun insertarLibro(libroPorAñadir: Libro): String{
         contador = 0
-        posicionLibro = 0
-        libroInsertado = false
-        while (!libroInsertado or (contador < 4)) {
-            if (!conLibro[contador].idLibro.toString().equals("0")) {
-                contador++
-            } else {
-                if (conLibro[contador].idLibro.toString().equals(libroPorAnadir.idLibro.toString())) {
-                    contador++
-                } else {
-                    conLibro[contador] == libroPorAnadir
-                    libroInsertado = true
-                    posicionLibro = contador
+        libroAñadido = false
+        while(contador < 4){
+            if(librosContenidos[contador] != null) {
+                if (librosContenidos[contador]?.tituloLibro.toString() == libroPorAñadir.tituloLibro.toString()) {
                     contador = 4
+                } else {
+                    contador++
                 }
+            } else {
+                librosContenidos[contador] = libroPorAñadir
+                libroAñadido = true
+                contador = 4
             }
         }
 
-        return if (libroInsertado) {
-            "Libro Añadido en la posicion $posicionLibro"
+        return if (libroAñadido) {
+            "Libro Añadido"
         } else {
-            "Libro no insertado"
+            "Libro no Añadido"
+        }
+    }
+
+    fun imprimirLibros(){
+        contador = 0
+        while (librosContenidos[contador] != null){
+            println("${librosContenidos[contador]?.tituloLibro}, ${librosContenidos[contador]?.autorLibro}")
+            contador++
         }
     }
 
 }
 
 fun main() {
-    var libro1 = Libro(69420, "Guia profesional de caza", "Mimiar", 654, -2)
-    var libro2 = Libro(69421, "Guia profesional de carpinteria", "Mimiar", 654, -2)
-    var libro3 = Libro(69422, "Guia profesional de pesca", "Mimiar", 654, -2)
-    var conju1 = ConjuntoLibros()
+    var libro1 = Libro(
+        "Geronimo Stilton: Viaje al Reino de la Fantasia",
+        "Elisabetta Dami",
+        352,
+        10
+    )
+    var libro2 = Libro(
+        "El Señor de los Anillos: La comunidad del Anillo",
+        "J.R.R Tolkien",
+        412,
+        9
+    )
 
-    println(libro1.infoLibro())
-    println(conju1.anadirLibro(libro1))
+    var coleccionLibros = ConjuntoLibros()
+
+    println(libro1.informacionLibro())
+    println(libro2.informacionLibro())
     println("")
-    println(libro2.infoLibro())
-    println(conju1.anadirLibro(libro2))
+    println(coleccionLibros.insertarLibro(libro1))
+    println(coleccionLibros.insertarLibro(libro1))
+    println(coleccionLibros.insertarLibro(libro2))
     println("")
-    println(libro3.infoLibro())
-    println(conju1.anadirLibro(libro3))
+
+    coleccionLibros.imprimirLibros()
+
 }
+
