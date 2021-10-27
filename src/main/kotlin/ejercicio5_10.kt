@@ -1,81 +1,214 @@
 class Libro(
-    var idLibro: Int,
     var tituloLibro: String,
     var autorLibro: String,
-    var numeroPaginasLibro: Int,
-    calificacionLibro: Int
+    var numeroPaginas: Int,
+    var calificacionLibro: Int
 ) {
 
-    var calificacionLibro: Int = comprobarPuntuacion(calificacionLibro)
-        set(value) {
-            field = comprobarPuntuacion(value)
-        }
-
-    fun comprobarPuntuacion(puntuacion: Int): Int {
-        return if (puntuacion in 0..10) {
-            puntuacion
-        } else {
-            0
-        }
+    init {
+        require(numeroPaginas > 0) { "El numero de paginas es negativo" }
+        require(calificacionLibro in 0..10) { "La calificicacion no entra dentro de los limites establecidos" }
     }
 
-    fun infoLibro(): String =
-        "Titulo: $tituloLibro \n Autor: $autorLibro \n Numero de Paginas: $numeroPaginasLibro \n Calificacion $calificacionLibro"
-
+    fun informacionLibro(): String =
+        "Titulo: $tituloLibro, Autor/a: $autorLibro, Numero de paginas: $numeroPaginas, Calificacion del Libro: $calificacionLibro"
 }
 
 class ConjuntoLibros() {
-    var conLibro = Array(5) { Libro(0, "", "", 0, 0) }
+    var librosContenidos: Array<Libro?> = kotlin.arrayOfNulls<Libro>(5)
     var contador: Int = 0
-    var posicionLibro: Int = 0
-    var libroInsertado: Boolean = false
+    var posicion: Int = 0
+    var libroAñadido: Boolean = false
+    var libroEliminado: Boolean = false
+    var cantidadLibrosEliminados: Int = 0
+    var calificacionMayorMenor: Int = 0
+    var tituloMayorMenor: String = ""
 
-    fun anadirLibro(LibroPorAnadir: Libro, posicion: Int): String {
-        conLibro[posicion] = LibroPorAnadir
-        return "Libro Añadido, posicion $posicion"
+    fun insertarLibro(libroPorAñadir: Libro): String{
+        contador = 0
+        posicion = 0
+        libroAñadido = false
+        while(contador < 5){
+            if(librosContenidos[contador] != null) {
+                if (librosContenidos[contador]?.tituloLibro.toString() == libroPorAñadir.tituloLibro.toString()) {
+                    contador = 5
+                } else {
+                    contador++
+                }
+            } else {
+                librosContenidos[contador] = libroPorAñadir
+                libroAñadido = true
+                posicion = contador
+                contador = 5
+            }
+        }
+
+        return if (libroAñadido) {
+            "Libro Añadido en la posicion $posicion"
+        } else {
+            "Libro no Añadido"
+        }
     }
 
-//    fun anadirLibro(libroPorAnadir: Libro): String {
-//        contador = 0
-//        posicionLibro = 0
-//        libroInsertado = false
-//        while (!libroInsertado or (contador < 4)) {
-//            if (!conLibro[contador].idLibro.toString().equals("0")) {
-//                contador++
-//            } else {
-//                if (conLibro[contador].idLibro.toString().equals(libroPorAnadir.idLibro.toString())) {
-//                    contador++
-//                } else {
-//                    conLibro[contador] == libroPorAnadir
-//                    libroInsertado = true
-//                    posicionLibro = contador
-//                    contador = 4
-//                }
-//            }
-//        }
-//
-//        return if (libroInsertado) {
-//            "Libro Añadido en la posicion $posicionLibro"
-//        } else {
-//            "Libro no insertado"
-//        }
-//    }
+    fun eliminarLibroPorTitulo(informacion: String): String{
+        contador = 0
+        libroEliminado = false
+        while(contador < 5){
+            if(librosContenidos[contador] != null) {
+                if (librosContenidos[contador]?.tituloLibro.toString() == informacion) {
+                    librosContenidos[contador] = null
+                    libroEliminado = true
+                    contador = 5
+                } else {
+                    contador ++
+                }
+            } else {
+                contador ++
+            }
+        }
 
+        return if (libroEliminado) {
+            "El Libro $informacion ha sido eliminado"
+        } else {
+            "No se ha hecho nada"
+        }
+    }
+
+    fun eliminarLibroPorAutor(informacion: String): String{
+        contador = 0
+        cantidadLibrosEliminados = 0
+        while(contador < 5){
+            if(librosContenidos[contador] != null) {
+                if (librosContenidos[contador]?.autorLibro.toString().uppercase() == informacion.uppercase()) {
+                    librosContenidos[contador] = null
+                    cantidadLibrosEliminados++
+                    contador++
+                } else {
+                    contador ++
+                }
+            } else {
+                contador ++
+            }
+        }
+
+        return if (cantidadLibrosEliminados > 0) {
+            "$cantidadLibrosEliminados libros del Autor/a $informacion han sido eliminados"
+        } else {
+            "No se ha hecho nada"
+        }
+    }
+
+    fun mayorMenor(){
+        contador = 0
+        calificacionMayorMenor = 0
+        tituloMayorMenor = ""
+        while(contador < 5){
+            if(librosContenidos[contador] != null) {
+                if (librosContenidos[contador]!!.calificacionLibro.toInt() > calificacionMayorMenor) {
+                    calificacionMayorMenor = librosContenidos[contador]!!.calificacionLibro.toInt()
+                    tituloMayorMenor = librosContenidos[contador]!!.tituloLibro.toString()
+                    contador++
+                } else {
+                    contador ++
+                }
+            } else {
+                contador ++
+            }
+        }
+        println("El libro con mayor calificacion es $tituloMayorMenor")
+
+        contador = 0
+        calificacionMayorMenor = 10
+        tituloMayorMenor = ""
+        while(contador < 5){
+            if(librosContenidos[contador] != null) {
+                if (librosContenidos[contador]!!.calificacionLibro.toInt() < calificacionMayorMenor) {
+                    calificacionMayorMenor = librosContenidos[contador]!!.calificacionLibro.toInt()
+                    tituloMayorMenor = librosContenidos[contador]!!.tituloLibro.toString()
+                    contador++
+                } else {
+                    contador ++
+                }
+            } else {
+                contador ++
+            }
+        }
+        println("El libro con menor calificacion es $tituloMayorMenor")
+    }
+
+    fun imprimirLibros(){
+        contador = 0
+        while (contador < 5){
+            println("${librosContenidos[contador]?.tituloLibro}, ${librosContenidos[contador]?.autorLibro}")
+            contador++
+        }
+    }
 
 }
 
 fun main() {
-    var libro1 = Libro(69420, "Guia profesional de caza", "Mimiar", 654, -2)
-    var libro2 = Libro(69421, "Guia profesional de carpinteria", "Mimiar", 654, -2)
-    var libro3 = Libro(69422, "Guia profesional de pesca", "Mimiar", 654, -2)
-    var conju1 = ConjuntoLibros()
+    var libro1 = Libro(
+        "Geronimo Stilton: Viaje al Reino de la Fantasia",
+        "Elisabetta Dami",
+        352,
+        9
+    )
+    var libro2 = Libro(
+        "El Señor de los Anillos: La comunidad del Anillo",
+        "J.R.R Tolkien",
+        412,
+        10
+    )
+    var libro3 = Libro(
+        "Harry Potter y la Piedra Filosofal",
+        "J.K. Rowling",
+        412,
+        6
+    )
+    var libro4 = Libro(
+        "Harry Potter y la Prision de Azkaban",
+        "J.K. Rowling",
+        413,
+        4
+    )
+    var libro5 = Libro(
+        "Harry Potter y la mama de Hargrid",
+        "J.K. Rowling",
+        416,
+        7
+    )
 
-    println(libro1.infoLibro())
-    println(conju1.anadirLibro(libro1, 1))
+    var coleccionLibros = ConjuntoLibros()
+
+    println(libro1.informacionLibro())
+    println(libro2.informacionLibro())
     println("")
-    println(libro2.infoLibro())
-    println(conju1.anadirLibro(libro2, 2))
+    println(coleccionLibros.insertarLibro(libro1))
+    println(coleccionLibros.insertarLibro(libro1))
+    println(coleccionLibros.insertarLibro(libro2))
+    println(coleccionLibros.insertarLibro(libro3))
+    println(coleccionLibros.insertarLibro(libro4))
+    println(coleccionLibros.insertarLibro(libro5))
     println("")
-    println(libro3.infoLibro())
-    println(conju1.anadirLibro(libro3, 3))
+
+    coleccionLibros.imprimirLibros()
+    println("")
+    println(coleccionLibros.eliminarLibroPorTitulo("El Señor de los Anillos: La comunidad del Anillo"))
+    println(coleccionLibros.eliminarLibroPorTitulo("El Señor de los Anillos: La comunidad del Anillo"))
+    println("")
+    coleccionLibros.imprimirLibros()
+    println("")
+    println(coleccionLibros.eliminarLibroPorAutor("J.K. Rowling"))
+    println(coleccionLibros.eliminarLibroPorAutor("J.K. Rowling"))
+    println("")
+    coleccionLibros.imprimirLibros()
+    println("")
+    println(coleccionLibros.insertarLibro(libro2))
+    println(coleccionLibros.insertarLibro(libro3))
+    println(coleccionLibros.insertarLibro(libro4))
+    println(coleccionLibros.insertarLibro(libro5))
+    println("")
+    coleccionLibros.mayorMenor()
+
 }
+
