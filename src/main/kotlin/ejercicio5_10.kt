@@ -21,6 +21,8 @@ class ConjuntoLibros() {
     var libroAñadido: Boolean = false
     var libroEliminado: Boolean = false
     var cantidadLibrosEliminados: Int = 0
+    var calificacionMayorMenor: Int = 0
+    var tituloMayorMenor: String = ""
 
     fun insertarLibro(libroPorAñadir: Libro): String{
         contador = 0
@@ -77,7 +79,7 @@ class ConjuntoLibros() {
         cantidadLibrosEliminados = 0
         while(contador < 5){
             if(librosContenidos[contador] != null) {
-                if (librosContenidos[contador]?.autorLibro.toString() == informacion) {
+                if (librosContenidos[contador]?.autorLibro.toString().uppercase() == informacion.uppercase()) {
                     librosContenidos[contador] = null
                     cantidadLibrosEliminados++
                     contador++
@@ -96,6 +98,44 @@ class ConjuntoLibros() {
         }
     }
 
+    fun mayorMenor(){
+        contador = 0
+        calificacionMayorMenor = 0
+        tituloMayorMenor = ""
+        while(contador < 5){
+            if(librosContenidos[contador] != null) {
+                if (librosContenidos[contador]!!.calificacionLibro.toInt() > calificacionMayorMenor) {
+                    calificacionMayorMenor = librosContenidos[contador]!!.calificacionLibro.toInt()
+                    tituloMayorMenor = librosContenidos[contador]!!.tituloLibro.toString()
+                    contador++
+                } else {
+                    contador ++
+                }
+            } else {
+                contador ++
+            }
+        }
+        println("El libro con mayor calificacion es $tituloMayorMenor")
+
+        contador = 0
+        calificacionMayorMenor = 10
+        tituloMayorMenor = ""
+        while(contador < 5){
+            if(librosContenidos[contador] != null) {
+                if (librosContenidos[contador]!!.calificacionLibro.toInt() < calificacionMayorMenor) {
+                    calificacionMayorMenor = librosContenidos[contador]!!.calificacionLibro.toInt()
+                    tituloMayorMenor = librosContenidos[contador]!!.tituloLibro.toString()
+                    contador++
+                } else {
+                    contador ++
+                }
+            } else {
+                contador ++
+            }
+        }
+        println("El libro con menor calificacion es $tituloMayorMenor")
+    }
+
     fun imprimirLibros(){
         contador = 0
         while (contador < 5){
@@ -111,13 +151,13 @@ fun main() {
         "Geronimo Stilton: Viaje al Reino de la Fantasia",
         "Elisabetta Dami",
         352,
-        10
+        9
     )
     var libro2 = Libro(
         "El Señor de los Anillos: La comunidad del Anillo",
         "J.R.R Tolkien",
         412,
-        9
+        10
     )
     var libro3 = Libro(
         "Harry Potter y la Piedra Filosofal",
@@ -126,7 +166,7 @@ fun main() {
         6
     )
     var libro4 = Libro(
-        "Harry Potter y la Prision de Queascodan",
+        "Harry Potter y la Prision de Azkaban",
         "J.K. Rowling",
         413,
         4
@@ -162,6 +202,13 @@ fun main() {
     println(coleccionLibros.eliminarLibroPorAutor("J.K. Rowling"))
     println("")
     coleccionLibros.imprimirLibros()
+    println("")
+    println(coleccionLibros.insertarLibro(libro2))
+    println(coleccionLibros.insertarLibro(libro3))
+    println(coleccionLibros.insertarLibro(libro4))
+    println(coleccionLibros.insertarLibro(libro5))
+    println("")
+    coleccionLibros.mayorMenor()
 
 }
 
